@@ -1,9 +1,8 @@
-import builtins
 from .base_parser import BaseParser
-from typed_ast.ast3 import NodeVisitor, ClassDef, Module, FunctionDef, Name, Assign, AnnAssign, Attribute
+from typed_ast.ast3 import AsyncFunctionDef, NodeVisitor, ClassDef, Module, FunctionDef, Name, Assign, AnnAssign, Attribute, Return
 from model.class_model import ClassModel
-from typing import TypeVar, Generic, List
-from os import chdir, system
+from typing import TypeVar, Generic, List, Dict
+from os import system
 
 
 T = TypeVar("T")
@@ -53,7 +52,7 @@ class LabGraphUnitsParser(BaseParser, NodeVisitor, Generic[T]):
                     
                     elif(hasattr(child.annotation,'value')):
 
-                        type = self.__construct_member_type(child.annotation,type)
+                        type = self.__construct_type(child.annotation,type)
                         
 
                     class_model.members.append({
@@ -71,8 +70,8 @@ class LabGraphUnitsParser(BaseParser, NodeVisitor, Generic[T]):
                     })
 
 
-                # case of a class method
-                elif isinstance(child, FunctionDef):
+                # case of a method
+                elif isinstance(child, (FunctionDef,AsyncFunctionDef)):
 
                     # argument type
                     arguments_info = list()
@@ -81,27 +80,46 @@ class LabGraphUnitsParser(BaseParser, NodeVisitor, Generic[T]):
                         if arg.arg == "self":
                             continue
 
-                        argument_info = ""
-                        argument_info += arg.arg
+                        argument_info = {}
+                        argument_info['name'] = arg.arg
                         
                         if arg.annotation is not None:
-                            argument_info += f": {arg.annotation.id}"
-
-                        elif arg.type_comment is not None:
-                            argument_info += f": {arg.type_comment}"
+                            argument_info['type'] = arg.annotation.id
 
                         arguments_info.append(argument_info)
 
-                    # return type
-                    return_info = ""
+                    # return type & data
+                    return_info = {}
+                    type:str = ''
+                    
+                    # checks for connections : this is specific for Groups & Graphs
+                    if child.name == "connections":
+                        connections:List[str] = []
 
-                    if isinstance(child.returns, Name):
-                        return_info = f": {child.returns.id}"
+                        # construct a list of connections
+                        for _child in child.body:
+                            for elts in _child.value.elts:
+                                for elt in elts.elts:
+                                    type = self.__construct_type(elt,'')
+                                    connections.append(type)
 
-                    elif child.type_comment is not None:
-                        return_info = f": {child.type_comment}"
+                        # transform the list of connections to a dict
+                        # each connection is represented as key-value
+                        connections_dict:Dict[str,str] = {}
+                        _iter = iter(connections)
+                        for value in _iter:
+                            key = value.split('.')[1]
+                            value = next(_iter).split('.')[1]
 
+                            connections_dict[key] = value if value != 'OUTPUT' else node.name
                         
+                        return_info['connections_dict'] = connections_dict
+
+                    if(child.returns.value):
+                        type = self.__construct_type(child.returns,type)
+                        return_info['type'] = type
+
+                
                     class_model.methods.append({
                         "name":child.name,
                         "args":arguments_info,
@@ -111,23 +129,37 @@ class LabGraphUnitsParser(BaseParser, NodeVisitor, Generic[T]):
         
             assert isinstance(class_model, ClassModel)
             self.classes.append(class_model)
+            self.generic_visit(node)
 
- 
-       
-    def __construct_member_type(self,value,type):
+    
+    def __construct_type(self,value,type):
+        """
+        Recursive method that helps to construct a string 
+        that represents a complex datatype of a class member or a method
         
-        if(hasattr(value,'attr')):
-            type = f"{self.__construct_member_type(value.value,type)}.{value.attr}"
+        Args:
+            type: the final string we are trying to construct recursivaly
+            value : an object that contains data about the type of the class member
+        """
         
-        elif(hasattr(value,'id')):
+        if hasattr(value,'attr'):
+            type = f"{self.__construct_type(value.value,type)}.{value.attr}"
+        
+        elif hasattr(value,'elts'):
+            type = f"{self.__construct_type(value.elts[0],type)}{f'.{type}' if type else ''}"
+
+        elif hasattr(value,'id'):
             return value.id
 
-        elif(hasattr(value,'slice')):
-            type =  f"{self.__construct_member_type(value.value,type)}.{self.__construct_member_type(value.slice,type)}{f'.{type}' if type else ''}"                   
+        elif isinstance(value,str):
+            return value
+
+        elif hasattr(value,'slice'):
+            type =  f"{self.__construct_type(value.value,type)}.{self.__construct_type(value.slice,type)}{f'.{type}' if type else ''}"                   
                     
         
-        elif(hasattr(value,'value')):
-            type = f"{self.__construct_member_type(value.value,type)}{f'.{type}' if type else ''}"
+        elif hasattr(value,'value'):
+            type = f"{self.__construct_type(value.value,type)}{f'.{type}' if type else ''}"
 
         return type
         
