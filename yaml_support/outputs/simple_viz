@@ -1,0 +1,76 @@
+RandomMessage:
+  type: Message
+  fields:
+    timestamp: float
+    data: np.ndarray
+
+NoiseGeneratorConfig:
+  type: Config
+  fields:
+    sample_rate: float
+    num_features: int
+
+NoiseGenerator:
+  type: Node
+  config: NoiseGeneratorConfig
+  outputs:
+  - RandomMessage
+
+RollingState:
+  type: State
+  fields:
+    messages: List.RandomMessage
+
+RollingConfig:
+  type: Config
+  fields:
+    window: float
+
+RollingAverager:
+  type: Node
+  state: RollingState
+  config: RollingConfig
+  inputs:
+  - RandomMessage
+  outputs:
+  - RandomMessage
+
+AveragedNoiseConfig:
+  type: Config
+  fields:
+    sample_rate: float
+    num_features: int
+    window: float
+
+AveragedNoise:
+  type: Group
+  config: AveragedNoiseConfig
+  outputs:
+  - RandomMessage
+  connections:
+    NoiseGenerator: RollingAverager
+    RollingAverager: AveragedNoise
+
+PlotState:
+  type: State
+  fields:
+    data: Optional.np.ndarray
+
+PlotConfig:
+  type: Config
+  fields:
+    refresh_rate: float
+    num_bars: int
+
+Plot:
+  type: Node
+  state: PlotState
+  config: PlotConfig
+  inputs:
+  - RandomMessage
+
+Demo:
+  type: Graph
+  connections:
+    AveragedNoise: Plot
+
