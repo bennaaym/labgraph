@@ -55,19 +55,13 @@ class LabGraphUnitsParser(BaseParser, NodeVisitor, Generic[T]):
                         type = self.__construct_type(child.annotation,type)
                         
 
-                    class_model.members.append({
-                        "name":name,
-                        "type":type
-                    })
+                    class_model.members[name] = type
                 
 
                 # case of a class member defined using assign operator
                 elif isinstance(child,Assign):
-                    
-                    class_model.members.append({
-                        "name":child.targets[0].id,
-                        "type":child.value.args[0].id
-                    })
+        
+                    class_model.members[child.targets[0].id] = child.value.args[0].id
 
 
                 # case of a method
@@ -81,7 +75,7 @@ class LabGraphUnitsParser(BaseParser, NodeVisitor, Generic[T]):
                             continue
 
                         argument_info = {}
-                        argument_info['name'] = arg.arg
+                        argument_info['name'] = arg.arg 
                         
                         if arg.annotation is not None:
                             argument_info['type'] = arg.annotation.id
@@ -120,11 +114,10 @@ class LabGraphUnitsParser(BaseParser, NodeVisitor, Generic[T]):
                         return_info['type'] = type
 
                 
-                    class_model.methods.append({
-                        "name":child.name,
+                    class_model.methods[child.name] = {
                         "args":arguments_info,
                         "return":return_info
-                    })
+                    }
                     
         
             assert isinstance(class_model, ClassModel)

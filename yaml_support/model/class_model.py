@@ -1,5 +1,5 @@
 from .base_model import BaseModel
-from typing import List, Any
+from typing import List, Dict, Any
 
 class ClassModel(BaseModel):
     """
@@ -7,8 +7,8 @@ class ClassModel(BaseModel):
     """
     def __init__(self,name:str, base: str) -> None:
         self.__name: str = name
-        self.__members: List[Any] = list()
-        self.__methods: List[Any] = list()
+        self.__members: Dict[str,str] = {}
+        self.__methods: Dict[str,Dict[Any]] = {}
         self.__base: str = base
 
 
