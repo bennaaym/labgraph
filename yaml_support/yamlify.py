@@ -25,7 +25,17 @@ def yamlify(python_file:str,yaml_file:str = ""):
     ast = ast3.parse(code_string)
     lg_units_parser.parse(ast)
 
-    yaml_file = yaml_file if yaml_file else f"{python_file[python_file.rindex('/'):python_file.rindex('.')]}.yaml"
+
+    if not yaml_file:
+        
+        last_back_slash_index = python_file.rfind('/')
+        last_dot_index = python_file.rfind('.')
+
+        if last_back_slash_index == -1:
+            yaml_file = f"{python_file[:last_dot_index]}.yaml"
+        else:
+            yaml_file =  f"{python_file[last_back_slash_index:last_dot_index]}.yaml"
+    
 
     # check if the file exists
     file = f"{Path(__file__).parent}/outputs/{yaml_file}"
