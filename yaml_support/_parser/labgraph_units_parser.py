@@ -30,12 +30,16 @@ class LabGraphUnitsParser(BaseParser, NodeVisitor, Generic[T]):
 
         assert isinstance(node, ClassDef)
        
+        # find the type of the base class
+        base_type:str = self.__construct_type(node.bases[0],'')
+        base_type = base_type.split('.')[-1]
+
         # checks if the class is a LabGraph Unit.
         # a class is a Labgraph unit if it inherents from LabGraph unit :
         #  Message, Config, State, Node, Group,  Graph
-        if node.bases and node.bases[0].attr in ('Message','Config','State','Node','Group','Graph'):
+        if node.bases and base_type in ('Message','Config','State','Node','Group','Graph'):
             
-            class_model = ClassModel(node.name, node.bases[0].attr)
+            class_model = ClassModel(node.name,base_type)
             
             for child in node.body:
                 
