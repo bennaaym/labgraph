@@ -113,6 +113,27 @@ class LabGraphUnitsParser(BaseParser, NodeVisitor, Generic[T]):
                         
                         return_info['connections_dict'] = connections_dict
 
+
+                    # checks for publisher & subscriber decorators
+                    publishers:List[str] = []
+                    subscribers:List[str] = []
+                    for decorator in child.decorator_list:
+                        if hasattr(decorator,'func'):
+                            decorator_type:str = self.__construct_type(decorator.func,'')
+                            decorator_type = decorator_type.split('.')[-1]
+
+                            if decorator_type in 'publisher':
+                                arg_type:str = self.__construct_type(decorator.args[0],'')
+                                publishers.append(arg_type)
+
+                            elif decorator_type in 'subscriber':
+                                arg_type:str = self.__construct_type(decorator.args[0],'')
+                                subscribers.append(arg_type)
+                                
+                    
+
+
+
                     if(child.returns.value):
                         type = self.__construct_type(child.returns,type)
                         return_info['type'] = type
@@ -120,7 +141,9 @@ class LabGraphUnitsParser(BaseParser, NodeVisitor, Generic[T]):
                 
                     class_model.methods[child.name] = {
                         "args":arguments_info,
-                        "return":return_info
+                        "return":return_info,
+                        "publishers":publishers,
+                        "subscribers":subscribers
                     }
                     
         

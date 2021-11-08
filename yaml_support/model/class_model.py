@@ -1,6 +1,7 @@
 from .base_model import BaseModel
 from typing import List, Dict, Any
 from serializer.yaml_serializer import YamlSerializer
+import os
 
 class ClassModel(BaseModel):
     """
@@ -67,21 +68,34 @@ class ClassModel(BaseModel):
         if "config" in self.members:
             obj[self.name]["config"] = self.members["config"]
 
-        if "INPUT" in self.members:
-            obj[self.name]["inputs"] = [self.members['INPUT']]
+        # inputs and outputs
+        inputs = set()
+        outputs = set()
 
-        if "OUTPUT" in self.members:
-            obj[self.name]["outputs"] = [self.members['OUTPUT']]
+        for method in self.methods:
+            for subscriber in self.methods[method]["subscribers"]:
+                inputs.add(self.members[subscriber])
+            
+            for publisher in self.methods[method]["publishers"]:
+                outputs.add(self.members[publisher])
+
+        obj[self.name]["inputs"] = list(inputs)
+        obj[self.name]["outputs"] = list(outputs)
 
         # case of a Group/Graph
-        if "connections" in self.methods:
-            connections:Dict[str,str] = \
-            { 
-                self.members[k]:(self.members[v] if v!=self.name else v)  for\
-                k,v in self.methods["connections"]["return"]["connections_dict"].items()
-            }
+        if self.base in ("Group","Graph"):
+            
+            if "OUTPUT" in self.members:
+                obj[self.name]["outputs"] = [self.members["OUTPUT"]]
+            
+            if "connections" in self.methods:
+                connections:Dict[str,str] = \
+                { 
+                    self.members[k]:(self.members[v] if v!=self.name else v)  for\
+                    k,v in self.methods["connections"]["return"]["connections_dict"].items()
+                }
 
-            obj[self.name]["connections"] = connections
+                obj[self.name]["connections"] = connections
             
          
 

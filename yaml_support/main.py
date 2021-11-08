@@ -4,6 +4,7 @@ from edge_list_generator  import edge_list_generator
 
 
 if __name__ == '__main__':
+    
 
     # parse .py 
     yamlify('../labgraph/examples/simple_viz_zmq.py')
