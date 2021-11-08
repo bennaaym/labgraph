@@ -1,6 +1,7 @@
 from .base_loader import BaseLoader
 from .error import PythonFileLoaderError
 from typing import List
+from pathlib import Path
 import os
 
 class PythonFileLoader(BaseLoader):
@@ -14,14 +15,16 @@ class PythonFileLoader(BaseLoader):
             file_path: The path of .py file 
         """
 
-        if not os.path.exists(path):
-            raise PythonFileLoaderError(f"{path} file not found")
-
-        if not os.path.isfile(path) or not path.endswith('.py'):
-            raise PythonFileLoaderError(f"{path} should be a .py file")
-
+        _path = f"{Path(__file__).parent.parent}/{path}"
         
-        with open(path, 'r') as file:
+        if not os.path.exists(_path):
+            raise PythonFileLoaderError(f"{_path} file not found")
+
+        if not os.path.isfile(_path) or not _path.endswith('.py'):
+            raise PythonFileLoaderError(f"{_path} should be a .py file")
+
+
+        with open(_path, 'r') as file:
             string = file.read()
             assert isinstance(string,str)
 

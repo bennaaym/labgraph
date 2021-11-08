@@ -1,3 +1,4 @@
+from pathlib import Path
 from .base_loader import BaseLoader
 from .error import YamlFileLoaderError
 from typing import Dict,Any
@@ -16,13 +17,15 @@ class YamlFileLoader(BaseLoader):
             file_path: The path of .yaml file 
         """
 
-        if not os.path.exists(path):
-            raise YamlFileLoaderError(f"{path} file not found")
+        _path = f"{Path(__file__).parent.parent}/{path}"
 
-        if not os.path.isfile(path) or not path.endswith('.yaml'):
-            raise YamlFileLoaderError(f"{path} should be a .yaml file")
+        if not os.path.exists(_path):
+            raise YamlFileLoaderError(f"{_path} file not found")
+
+        if not os.path.isfile(_path) or not _path.endswith('.yaml'):
+            raise YamlFileLoaderError(f"{_path} should be a .yaml file")
 
         
-        with open(path, 'r') as file:
+        with open(_path, 'r') as file:
             _dict = yaml.load(file, Loader=yaml.SafeLoader)
             return _dict
