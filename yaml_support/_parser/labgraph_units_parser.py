@@ -82,7 +82,8 @@ class LabGraphUnitsParser(BaseParser, NodeVisitor, Generic[T]):
                         argument_info['name'] = arg.arg 
                         
                         if arg.annotation is not None:
-                            argument_info['type'] = arg.annotation.id
+                            type:str = self.__construct_type(arg.annotation,'')
+                            argument_info['type'] = type
 
                         arguments_info.append(argument_info)
 
@@ -134,7 +135,7 @@ class LabGraphUnitsParser(BaseParser, NodeVisitor, Generic[T]):
 
 
 
-                    if(child.returns.value):
+                    if(hasattr(child.returns,'value')):
                         type = self.__construct_type(child.returns,type)
                         return_info['type'] = type
 
