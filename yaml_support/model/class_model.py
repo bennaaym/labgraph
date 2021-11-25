@@ -1,6 +1,6 @@
 from .base_model import BaseModel
 from typing import List, Dict, Any
-from serializer.yaml_serializer import YamlSerializer
+from yaml_support.serializer.yaml_serializer import YamlSerializer
 import os
 
 class ClassModel(BaseModel):
@@ -10,27 +10,27 @@ class ClassModel(BaseModel):
     def __init__(self,name:str, base: str) -> None:
         self.__name: str = name
         self.__members: Dict[str,str] = {}
-        self.__methods: Dict[str,Dict[Any]] = {}
+        self.__methods: Dict[str,Dict[str,Any]] = {}
         self.__base: str = base
     
     @property
-    def name(self): 
+    def name(self)-> str: 
         return self.__name
 
     @property
-    def members(self): 
+    def members(self)-> Dict[str,str]: 
         return self.__members
 
     @property
-    def methods(self): 
+    def methods(self)-> Dict[str,Dict[str,Any]]: 
         return self.__methods
 
     @property
-    def base(self): 
+    def base(self)-> str: 
         return self.__base
 
 
-    def save(self,file):
+    def save(self,file)-> None:
         """
         serialize the current class model and save it as YAML file
         """
@@ -43,7 +43,7 @@ class ClassModel(BaseModel):
 
 
     
-    def __save_message(self,file):
+    def __save_message(self,file)-> None:
         YamlSerializer.serialize({
             f"{self.name}":
             {
@@ -53,7 +53,7 @@ class ClassModel(BaseModel):
         },file)
 
     
-    def __save_module(self,file):
+    def __save_module(self,file)-> None:
       
         obj:Dict[str,Dict[Any]] = {
 

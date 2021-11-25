@@ -1,10 +1,11 @@
 from pathlib import Path
 from typed_ast import ast3
-from _parser.base_parser import BaseParser
-from _parser.labgraph_units_parser import LabGraphUnitsParser
-from loader.base_loader import BaseLoader
-from loader.python_file_loader import PythonFileLoader
+from yaml_support._parser.base_parser import BaseParser
+from yaml_support._parser.labgraph_units_parser import LabGraphUnitsParser
+from yaml_support.loader.base_loader import BaseLoader
+from yaml_support.loader.python_file_loader import PythonFileLoader
 import os
+import ntpath
 
 
 
@@ -27,23 +28,17 @@ def yamlify(python_file:str,yaml_file:str = ""):
 
 
     if not yaml_file:
-        
-        last_back_slash_index = python_file.rfind('/')
-        last_dot_index = python_file.rfind('.')
+        yaml_file = f"{ntpath.basename(python_file)}"
 
-        if last_back_slash_index == -1:
-            yaml_file = f"{python_file[:last_dot_index]}.yaml"
-        else:
-            yaml_file =  f"{python_file[last_back_slash_index:last_dot_index]}.yaml"
-    
 
     # check if the file exists
-    file = f"{Path(__file__).parent}/outputs/{yaml_file}"
-
+    file = f'{os.path.abspath(f"yaml_outputs/{yaml_file}")[:-3]}.yaml'
 
     if os.path.exists(file):
         os.remove(file)
 
     for cls in lg_units_parser.classes:
-        cls.save(yaml_file)
+        cls.save(file)
 
+
+    return file

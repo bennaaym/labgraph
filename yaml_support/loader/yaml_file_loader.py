@@ -8,7 +8,7 @@ import os
 
 class YamlFileLoader(BaseLoader):
 
-    def load_from_file(self,path:str) -> Dict[str,Any]:
+    def load_from_file(self,file_path:str) -> Dict[str,Any]:
 
         """
         Returns a dict from .yaml file
@@ -17,7 +17,7 @@ class YamlFileLoader(BaseLoader):
             file_path: The path of .yaml file 
         """
 
-        _path = f"{Path(__file__).parent.parent}/{path}"
+        _path = file_path
 
         if not os.path.exists(_path):
             raise YamlFileLoaderError(f"{_path} file not found")

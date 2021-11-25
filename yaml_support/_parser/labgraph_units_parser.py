@@ -1,6 +1,15 @@
 from .base_parser import BaseParser
-from typed_ast.ast3 import AsyncFunctionDef, NodeVisitor, ClassDef, Module, FunctionDef, Name, Assign, AnnAssign, Attribute, Return
-from model.class_model import ClassModel
+from typed_ast.ast3 import (
+    AsyncFunctionDef, 
+    NodeVisitor,
+    ClassDef, 
+    Module, 
+    FunctionDef, 
+    Assign, 
+    AnnAssign, 
+)
+
+from yaml_support.model.class_model import ClassModel
 from typing import TypeVar, Generic, List, Dict
 from os import system
 
@@ -31,8 +40,10 @@ class LabGraphUnitsParser(BaseParser, NodeVisitor, Generic[T]):
         assert isinstance(node, ClassDef)
        
         # find the type of the base class
-        base_type:str = self.__construct_type(node.bases[0],'')
-        base_type = base_type.split('.')[-1]
+
+        if len(node.bases):
+            base_type:str = self.__construct_type(node.bases[0],'')
+            base_type = base_type.split('.')[-1]
 
         # checks if the class is a LabGraph Unit.
         # a class is a Labgraph unit if it inherents from LabGraph unit :
