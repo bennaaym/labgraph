@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +11,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -33,14 +34,14 @@
           <div class="body" role="main">
             
   <div class="section" id="zmq-support">
-<h1>ZMQ Support<a class="headerlink" href="#zmq-support" title="Permalink to this headline">¶</a></h1>
+<h1>ZMQ Support<a class="headerlink" href="#zmq-support" title="Permalink to this heading">¶</a></h1>
 <p>LabGraph has two types of nodes which allow us to use the <a class="reference external" href="https://zeromq.org/languages/python/">ZeroMQ (ZMQ) library</a>: <code class="docutils literal notranslate"><span class="pre">ZMQPollerNode</span></code> and <code class="docutils literal notranslate"><span class="pre">ZMQSenderNode</span></code>. They work with ZMQ sockets that use the PUB and SUB modes; other modes like REQ/REP and PAIR are currently unsupported.</p>
 <div class="section" id="zmqmessage">
-<h2>ZMQMessage<a class="headerlink" href="#zmqmessage" title="Permalink to this headline">¶</a></h2>
+<h2>ZMQMessage<a class="headerlink" href="#zmqmessage" title="Permalink to this heading">¶</a></h2>
 <p>The basic message type that is used by both the <code class="docutils literal notranslate"><span class="pre">ZMQPollerNode</span></code> and <code class="docutils literal notranslate"><span class="pre">ZMQSenderNode</span></code> to communicate ZMQ data to the graph. It has just one field, <code class="docutils literal notranslate"><span class="pre">data</span></code>, which contains the raw bytes sent over the ZMQ socket.</p>
 </div>
 <div class="section" id="zmqpollernode">
-<h2>ZMQPollerNode<a class="headerlink" href="#zmqpollernode" title="Permalink to this headline">¶</a></h2>
+<h2>ZMQPollerNode<a class="headerlink" href="#zmqpollernode" title="Permalink to this heading">¶</a></h2>
 <p>This node polls ZMQ data of a particular ZMQ topic at a particular read address (both configurable). Any data polled by the node is published as a <code class="docutils literal notranslate"><span class="pre">ZMQMessage</span></code> back to the rest of the graph. This node has the following configuration parameters via <code class="docutils literal notranslate"><span class="pre">ZMQPollerConfig</span></code>:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">read_addr</span></code>: The address through which ZMQ data should be polled.</p></li>
@@ -49,7 +50,7 @@
 </ul>
 </div>
 <div class="section" id="zmqsendernode">
-<h2>ZMQSenderNode<a class="headerlink" href="#zmqsendernode" title="Permalink to this headline">¶</a></h2>
+<h2>ZMQSenderNode<a class="headerlink" href="#zmqsendernode" title="Permalink to this heading">¶</a></h2>
 <p>This node subscribes to a stream of <code class="docutils literal notranslate"><span class="pre">ZMQMessage</span></code>s, and publishes its contents over ZMQ at a configured address/topic. This node has the following configuration parameters via <code class="docutils literal notranslate"><span class="pre">ZMQSenderConfig</span></code>:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">write_addr</span></code>: The address to which ZMQ data should be written.</p></li>
@@ -114,7 +115,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -131,7 +132,7 @@
       &copy;2004 - present Facebook. All Rights Reserved..
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

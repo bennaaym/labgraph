@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +11,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -33,7 +34,7 @@
           <div class="body" role="main">
             
   <div class="section" id="labgraph-concepts">
-<h1>LabGraph Concepts<a class="headerlink" href="#labgraph-concepts" title="Permalink to this headline">¶</a></h1>
+<h1>LabGraph Concepts<a class="headerlink" href="#labgraph-concepts" title="Permalink to this heading">¶</a></h1>
 <p>The fundamental units of systems built with LabGraph are:</p>
 <ul class="simple">
 <li><p><span class="xref myst"><strong>Messages</strong></span></p></li>
@@ -46,7 +47,7 @@
 <p>Together, these concepts allow us to construct <a class="reference external" href="https://en.wikipedia.org/wiki/Real-time_computing">real-time</a> computational [graphs](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics). These are “networks” of algorithms working together to produce some result within a time constraint. We want to be able to iterate on systems we build this way as efficiently as possible, which is what LabGraph is designed to enable. By enabling the fast plug-and-play of different nodes in such a graph, we can rapidly try out different hardware sensors, preprocessing pipelines, machine learning models, and user interfaces.</p>
 <p>In this overview we will use a toy example of a simple visualization. The example is intended to illustrate the end-to-end combination of a data source, processing step, and user interface. While this may not seem like a useful piece of software to build, this example is a jumping-off point that is extensible to any combination of hardware, processing, and UI.</p>
 <div class="section" id="messages">
-<h2>Messages<a class="headerlink" href="#messages" title="Permalink to this headline">¶</a></h2>
+<h2>Messages<a class="headerlink" href="#messages" title="Permalink to this heading">¶</a></h2>
 <p>A <strong>message</strong> is a piece of data with a consistent structure. For example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">labgraph.v1</span> <span class="k">as</span> <span class="nn">lg</span>
@@ -85,13 +86,13 @@
 </div>
 </div>
 <div class="section" id="streams-and-topics">
-<h2>Streams and Topics<a class="headerlink" href="#streams-and-topics" title="Permalink to this headline">¶</a></h2>
+<h2>Streams and Topics<a class="headerlink" href="#streams-and-topics" title="Permalink to this heading">¶</a></h2>
 <p>A <strong>stream</strong> is a sequence of messages that is accessible in real-time. Streams are a useful construct when we want to build systems that respond in real-time to input from a hardware device. In this example we will stream <code class="docutils literal notranslate"><span class="pre">RandomMessage</span></code> which is not particularly useful, but you could imagine a sensor stream instead in an experimental setting.</p>
 <p>A <strong>topic</strong> is a named reference to a stream. This is useful because we usually want to refer to a stream by different names in different contexts.</p>
 <p>We’ll see how to create topics when we discuss nodes below, and we’ll see how to create streams when we discuss groups.</p>
 </div>
 <div class="section" id="nodes">
-<h2>Nodes<a class="headerlink" href="#nodes" title="Permalink to this headline">¶</a></h2>
+<h2>Nodes<a class="headerlink" href="#nodes" title="Permalink to this heading">¶</a></h2>
 <p>A <strong>node</strong> is a class that describes a self-contained algorithm that operates on topics. Nodes have the following properties:</p>
 <ul class="simple">
 <li><p>They define topics which act as inputs and outputs for streams</p></li>
@@ -145,7 +146,7 @@
 </ul>
 </div>
 <div class="section" id="groups">
-<h2>Groups<a class="headerlink" href="#groups" title="Permalink to this headline">¶</a></h2>
+<h2>Groups<a class="headerlink" href="#groups" title="Permalink to this heading">¶</a></h2>
 <p>A <strong>group</strong> is a container that includes some functionality that can be reused much like a node can be. A group can contain nodes, as well as other groups. As a result, groups enable composition and swappability of subgraphs.</p>
 <p>Suppose we wanted a way to quickly package together a data source and a transformation of that data. Here is a <code class="docutils literal notranslate"><span class="pre">Generator</span></code> node, as well as a group that packages it with <code class="docutils literal notranslate"><span class="pre">RollingAverager</span></code> above:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">GeneratorConfig</span><span class="p">(</span><span class="n">lg</span><span class="o">.</span><span class="n">Config</span><span class="p">):</span>
@@ -202,7 +203,7 @@
 <p>Now we can use <code class="docutils literal notranslate"><span class="pre">AveragedNoise</span></code> as if it were a node – it is a self-contained module that we can reuse anywhere we want.</p>
 </div>
 <div class="section" id="graphs">
-<h2>Graphs<a class="headerlink" href="#graphs" title="Permalink to this headline">¶</a></h2>
+<h2>Graphs<a class="headerlink" href="#graphs" title="Permalink to this heading">¶</a></h2>
 <p>A <strong>graph</strong> is a complete set of topics and nodes that describes a functioning system. It is actually a group, but it is assumed to be the outermost container for the description of a system. Suppose we want to display a live visualization using our group from earlier. We can define a graph as follows:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Demo</span><span class="p">(</span><span class="n">lg</span><span class="o">.</span><span class="n">Graph</span><span class="p">):</span>
     <span class="n">AVERAGED_NOISE</span><span class="p">:</span> <span class="n">AveragedNoise</span>
@@ -297,7 +298,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -314,7 +315,7 @@
       &copy;2004 - present Facebook. All Rights Reserved..
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +11,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -33,10 +34,10 @@
           <div class="body" role="main">
             
   <div class="section" id="cthulhu">
-<h1>Cthulhu<a class="headerlink" href="#cthulhu" title="Permalink to this headline">¶</a></h1>
+<h1>Cthulhu<a class="headerlink" href="#cthulhu" title="Permalink to this heading">¶</a></h1>
 <p>Cthulhu is a flexible real-time streaming and synchronization framework.</p>
 <div class="section" id="what-is-cthulhu">
-<h2>What is Cthulhu?<a class="headerlink" href="#what-is-cthulhu" title="Permalink to this headline">¶</a></h2>
+<h2>What is Cthulhu?<a class="headerlink" href="#what-is-cthulhu" title="Permalink to this heading">¶</a></h2>
 <p>Cthulhu is a C++ library with minimal software dependencies. It provides an API for building low-latency processing graphs using standardized and customizable stream types.</p>
 <p>So, it’s a pub/sub framework, why not just use <other framework>?</p>
 <ol class="arabic simple">
@@ -46,11 +47,11 @@
 <p>Cthulhu is currently supported on Windows, Mac, Linux, and Android.</p>
 </div>
 <div class="section" id="why-should-i-care">
-<h2>Why should I care?<a class="headerlink" href="#why-should-i-care" title="Permalink to this headline">¶</a></h2>
+<h2>Why should I care?<a class="headerlink" href="#why-should-i-care" title="Permalink to this heading">¶</a></h2>
 <p>Cthulhu enables tooling and infrastructure reuse across real-time pipelines, and modularity for reuse of subcomponents. For a user that builds a new pipeline using entirely existing stream types and compute functions, all tooling comes for free.</p>
 </div>
 <div class="section" id="streams">
-<h2>Streams<a class="headerlink" href="#streams" title="Permalink to this headline">¶</a></h2>
+<h2>Streams<a class="headerlink" href="#streams" title="Permalink to this heading">¶</a></h2>
 <p>To use Cthulhu, first you must define the layout of your streaming data. Cthulhu comes packaged with a few fundamental types such as image and audio streams, but provides an API for users to register their own types without modification to the Cthulhu library.</p>
 <p>A sample of a stream has 4 components:</p>
 <ul class="simple">
@@ -144,7 +145,7 @@
 <p>You may ask: but what if I need multiple content blocks in my stream? The answer is, you don’t. If you need an additional content block, then you need an additional stream. Cthulhu’s APIs make it just as easy and performant to work with multiple streams instead of just one, so your system will thank you for the modularity of splitting out the data.</p>
 </div>
 <div class="section" id="nodes">
-<h2>Nodes<a class="headerlink" href="#nodes" title="Permalink to this headline">¶</a></h2>
+<h2>Nodes<a class="headerlink" href="#nodes" title="Permalink to this heading">¶</a></h2>
 <p>Nodes are a logical unit of compute within the pipeline which receives N data streams in to produce M data streams out. Cthulhu provides an API for convenient construction of Nodes.</p>
 <p>Here’s an example of the most basic pub/sub behavior using a “Basic” stream type with sample type BasicSample:</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">cthulhu</span><span class="o">::</span><span class="n">Context</span> <span class="n">myContext</span><span class="p">(</span><span class="s">&quot;my_context&quot;</span><span class="p">);</span>
@@ -227,7 +228,7 @@
 <p>Underneath the hood, Cthulhu is creating Producers and Consumers for each of these streams, and joining them together in an Aligner and a Dispatcher. The default Alignment behavior is based on timestamp matching with a max latency and tolerance threshold. The user can create their own variants of Aligner and pass them via MultiTransformerOptions (or MultiSubscriberOptions). This allows for customizable alignment behavior. Cthulhu comes packaged with an additional SubAligner implementation that can align the sub-samples of streams within a Content Block. This requires any stream using sub-samples to include a Sample Rate within its Config.</p>
 </div>
 <div class="section" id="clock">
-<h2>Clock<a class="headerlink" href="#clock" title="Permalink to this headline">¶</a></h2>
+<h2>Clock<a class="headerlink" href="#clock" title="Permalink to this heading">¶</a></h2>
 <p>Cthulhu also provides a clock interface, useful for system simulation. A user should query time through cthulhu:</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">time</span> <span class="o">=</span> <span class="n">cthulhu</span><span class="o">::</span><span class="n">clock</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getTime</span><span class="p">();</span>
 </pre></div>
@@ -253,7 +254,7 @@
 <p>Listeners of the clock can subscribe to events, such as start, pause, etc.</p>
 </div>
 <div class="section" id="framework">
-<h2>Framework<a class="headerlink" href="#framework" title="Permalink to this headline">¶</a></h2>
+<h2>Framework<a class="headerlink" href="#framework" title="Permalink to this heading">¶</a></h2>
 <p>All of the above is sufficient for most users of Cthulhu to accomplish their goal. However, these functionalities under the hood are using the Cthulhu Framework Singleton to achieve their goals. The Framework has 4 components:</p>
 <ul class="simple">
 <li><p>TypeRegistry - Provides access to information about stream types that have been registered. E.g. names of fields, basic flag, sizes, etc.</p></li>
@@ -324,7 +325,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -341,7 +342,7 @@
       &copy;2004 - present Facebook. All Rights Reserved..
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

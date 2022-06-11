@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +11,7 @@
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -33,10 +34,10 @@
           <div class="body" role="main">
             
   <div class="section" id="real-time-streaming-performance-in-labgraph-cthulhu">
-<h1>Real-Time Streaming Performance in LabGraph &amp; Cthulhu<a class="headerlink" href="#real-time-streaming-performance-in-labgraph-cthulhu" title="Permalink to this headline">¶</a></h1>
+<h1>Real-Time Streaming Performance in LabGraph &amp; Cthulhu<a class="headerlink" href="#real-time-streaming-performance-in-labgraph-cthulhu" title="Permalink to this heading">¶</a></h1>
 <p>TL;DR: Based on a performance test in this doc, LabGraph and Cthulhu support 100s of MB/s of data transfer in several kHz of samples.</p>
 <div class="section" id="plots">
-<h2>Plots<a class="headerlink" href="#plots" title="Permalink to this headline">¶</a></h2>
+<h2>Plots<a class="headerlink" href="#plots" title="Permalink to this heading">¶</a></h2>
 <p><img alt="Sample Rate and Data Transfer cross Platfrom and Language" src="https://raw.githubusercontent.com/facebookresearch/labgraph/master/docs/performance/images/sample_rate_data_transfer_cross_platform_language.png" /></p>
 <p><img alt="Sample Rate and Data Transfer by Block Size" src="https://raw.githubusercontent.com/facebookresearch/labgraph/master/docs/performance/images/sample_rate_data_transfer_rate_by_block_size.png" /></p>
 <p align="center">
@@ -44,7 +45,7 @@
 </p>
 </div>
 <div class="section" id="discussion">
-<h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this headline">¶</a></h2>
+<h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>The difference between C++ and Python performance is not as large in this analysis. There is still a significant scalar difference on macOS and Linux, but it likely leaves many high-throughput use cases on the table for use with Python.</p></li>
 <li><p>In a few cases (Windows sample rate, macOS data rate), the Python performance is actually <em>greater</em> than the C++ performance! The way we allocate samples in Python and C++ follow fairly different code paths, so it may be the case that the C++ test is incurring some overhead that the Python test isn’t. One difference between the two is that the C++ test makes use of a subclass of <code class="docutils literal notranslate"><span class="pre">cthulhu::AutoStreamSample</span></code> whereas Python always stays at the more generic <code class="docutils literal notranslate"><span class="pre">cthulhu::StreamSample</span></code> level. Another difference is that Python uses numpy to deal with blocks whereas C++ doesn’t. However, a deeper analysis will help to get to the bottom of this.</p></li>
@@ -53,7 +54,7 @@
 </ul>
 </div>
 <div class="section" id="methodology">
-<h2>Methodology<a class="headerlink" href="#methodology" title="Permalink to this headline">¶</a></h2>
+<h2>Methodology<a class="headerlink" href="#methodology" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>The root process decides the number of tests to run, and their parameters, based on command-line arguments. In particular, because we are interested in the effect of the block size, there is a –dynamic-size parameter which selects a single chosen dynamic block size, or –many-dynamic-sizes which runs many tests for a battery of different dynamic block sizes. For this analysis a log scale from 2^3 to 2^23 bytes is used for the block sizes. The –duration parameter controls how long each block size is streamed for; 2 minutes (–duration 120) are chosen.</p></li>
 <li><p>These tests often provide variable results because of the OS’s scheduler, which can technically put the test to sleep for as long as it wants. To minimize this variability tools of the OSes are used to maximize the priority given to the root process (this priority then cascades to the child processes we spawn). For macOS and Linux this meant the load test is run with sudo nice -n -20 and on Windows start /realtime is used.</p></li>
@@ -62,7 +63,7 @@
 </ul>
 </div>
 <div class="section" id="caveats-opportunities">
-<h2>Caveats &amp; Opportunities<a class="headerlink" href="#caveats-opportunities" title="Permalink to this headline">¶</a></h2>
+<h2>Caveats &amp; Opportunities<a class="headerlink" href="#caveats-opportunities" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>These results are only as good as the tests. As mentioned above, some discrepancy between the C++ and Python versions of the load test is making it so that Python sometimes outperforms C++. This could be pointing to either a mistake in the load test implementation adding extra overhead to C++. It could also be the case that the code paths in these cases are so different that the performance really does turn out this way.</p></li>
 <li><p>In these tests a very simple graph topology is used: one publisher streaming to one subscriber. More sophisticated graph topologies with many publishers and/or subscribers could be tested.</p></li>
@@ -75,7 +76,7 @@
 </ul>
 </div>
 <div class="section" id="overall-takeaways">
-<h2>Overall Takeaways<a class="headerlink" href="#overall-takeaways" title="Permalink to this headline">¶</a></h2>
+<h2>Overall Takeaways<a class="headerlink" href="#overall-takeaways" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>This study provides a high level picture of how LabGraph and Cthulhu perform on different platforms. What we can see for sure is that the order of magnitude we are dealing with is several kHz of samples and 100s of MB/s of data transfer that Dragonfly can support. The uncertainty comes from the tests that were written, in particular when we try to compare across languages. Still, from speaking with our colleagues in Pittsburgh who work on Cthulhu, it sounds like this is a reasonable starting point for understanding our performance that we can build upon. For example, we can take these metrics, start logging them, and monitor for regressions; even if the metrics aren’t perfect, sudden movements in them could alert us to potentially faulty changes. This also gives us a reasonable ballpark for whether or not we would be able to support the data rate of a proposed hardware system.</p></li>
 <li><p>Please share your thoughts and suggestions! Measuring and tuning the performance of our frameworks is a work in progress. Additional ideas for testing methods and analyses are welcomed.</p></li>
@@ -143,7 +144,7 @@ Sample test run: python load_test.py –duration 30 –output load_test.h5</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -160,7 +161,7 @@ Sample test run: python load_test.py –duration 30 –output load_test.h5</p>
       &copy;2004 - present Facebook. All Rights Reserved..
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

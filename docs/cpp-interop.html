@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +11,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -33,7 +34,7 @@
           <div class="body" role="main">
             
   <div class="section" id="c-interoperability">
-<h1>C++ Interoperability<a class="headerlink" href="#c-interoperability" title="Permalink to this headline">¶</a></h1>
+<h1>C++ Interoperability<a class="headerlink" href="#c-interoperability" title="Permalink to this heading">¶</a></h1>
 <p>Sometimes, Python just isn’t fast enough to be able to process real-time signals within an acceptable latency bound. (Or, it’s too much effort to tune Python to do so.) In these cases, we may want to drop down to C++ to implement some real-time processing in a more performant manner.</p>
 <p>LabGraph comes with a <code class="docutils literal notranslate"><span class="pre">labgraph_cpp</span></code> library which allows us to define nodes directly in C++. Then, with the help of <a class="reference external" href="https://github.com/pybind/pybind11">pybind11</a>, we can embed that node in a LabGraph graph just as we would a Python node.</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// MyCPPSource.h</span>
@@ -146,7 +147,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -163,7 +164,7 @@
       &copy;2004 - present Facebook. All Rights Reserved..
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

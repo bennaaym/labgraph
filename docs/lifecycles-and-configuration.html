@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +11,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -33,7 +34,7 @@
           <div class="body" role="main">
             
   <div class="section" id="module-lifecycle">
-<h1>Module Lifecycle<a class="headerlink" href="#module-lifecycle" title="Permalink to this headline">¶</a></h1>
+<h1>Module Lifecycle<a class="headerlink" href="#module-lifecycle" title="Permalink to this heading">¶</a></h1>
 <p>A node, group, or graph (a module) goes through the following steps in its lifetime:</p>
 <ol class="arabic simple">
 <li><p><strong>Definition</strong>: The module type is defined in Python code which the Python interpreter reads into memory.</p></li>
@@ -44,7 +45,7 @@
 </ol>
 </div>
 <div class="section" id="configuration">
-<h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
+<h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading">¶</a></h1>
 <p>LabGraph provides a way to concisely specify configuration that is given to a graph and forwarded to its descendant nodes. We start by defining a configuration type:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyNodeConfig</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Config</span><span class="p">):</span>
   <span class="n">num_trials</span><span class="p">:</span> <span class="nb">int</span>
@@ -140,7 +141,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -157,7 +158,7 @@
       &copy;2004 - present Facebook. All Rights Reserved..
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
